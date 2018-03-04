@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "478268282214",
+    "firebase_url": "https://attendance-manager-5cd51.firebaseio.com",
+    "project_id": "attendance-manager-5cd51",
+    "storage_bucket": "attendance-manager-5cd51.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478268282214:android:1d08fac820f4c537",
+        "android_client_info": {
+          "package_name": "com.example.vikrant.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478268282214-j82mdl83sa2jfh435migtj9h1ldvbri2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3DKMS6jOEeK2fSajLgUblXjeTBiEpxBM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478268282214:android:a6f5b524cb0ab8bb",
+        "android_client_info": {
+          "package_name": "com.example.vikrant.attendancemanageradmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478268282214-j82mdl83sa2jfh435migtj9h1ldvbri2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3DKMS6jOEeK2fSajLgUblXjeTBiEpxBM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
