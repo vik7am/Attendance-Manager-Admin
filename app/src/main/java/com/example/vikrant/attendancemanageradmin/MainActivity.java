@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            getUserName();
+            //getUserName();
             //Toast.makeText(getApplicationContext(),"Welcome",Toast.LENGTH_SHORT).show();
             return true;
         }
