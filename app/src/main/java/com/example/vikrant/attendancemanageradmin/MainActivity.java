@@ -1,12 +1,15 @@
 package com.example.vikrant.attendancemanageradmin;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,8 +22,9 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
 
     EditText editText;
-    String name;
+    String name,userId;
     DatabaseReference databaseReference;
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +32,26 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         setContentView(R.layout.activity_main);
         editText=new EditText(getApplicationContext());
         editText.setTextColor(Color.BLACK);
-        init();
+        //init();
     }
 
     public void getUserName()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter Name");
         builder.setView(editText);
         builder.setPositiveButton("Ok", this);
         builder.create();
         builder.show();
+    }
+
+    public void students(View view)
+    {
+        startActivity(new Intent(getApplicationContext(),StudentActivity.class));
+    }
+    public void teachers(View view)
+    {
+
     }
 
     public void init()
@@ -56,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
                 // Failed to read value
             }
         });
+
     }
 
     private void writeNewUser(String userId, String name) {
@@ -84,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         name=editText.getText().toString().toLowerCase();
-        writeNewUser("1",name);
+        userId = databaseReference.push().getKey();
+        writeNewUser(userId,name);
+        //((ViewGroup)editText.getParent()).removeView(editText);
     }
 }
