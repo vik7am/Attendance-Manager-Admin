@@ -19,7 +19,9 @@
         <activity android:name=".admin.StudentActivity" />
         <activity android:name=".admin.AdminMainActivity" />
         <activity android:name=".admin.TeacherActivity" />
-        <activity android:name=".admin.SubjectActivity"></activity>
+        <activity android:name=".admin.SubjectActivity" />
+        <activity android:name=".admin.TimeTableSettingActivity" />
+        <activity android:name=".admin.TimeTableActivity"/>
     </application>
 
 </manifest>

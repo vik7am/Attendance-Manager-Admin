@@ -1,5 +1,6 @@
 package com.example.vikrant.attendancemanageradmin.admin;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,7 @@ public class AdminMainActivity extends AppCompatActivity {
     }
     public void timetable(View view)
     {
-
+        startActivity(new Intent(getApplicationContext(),TimeTableActivity.class));
     }
 
 
