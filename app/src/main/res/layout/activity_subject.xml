@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vikrant.attendancemanageradmin.admin.StudentActivity">
+    tools:context="com.example.vikrant.attendancemanageradmin.admin.SubjectActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,6 +27,15 @@
                 android:inputType="textPersonName"
                 android:text="" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
+                android:textSize="18sp"
+                android:clickable="true"
+                android:onClick="selectTeacher"
+                android:text="TextView" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,8 +45,7 @@
                     android:id="@+id/button3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_margin="25dp"
                     android:layout_weight="1"
                     android:onClick="uploadData"
                     android:text="Add" />
@@ -46,8 +54,7 @@
                     android:id="@+id/button4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_margin="25dp"
                     android:layout_weight="1"
                     android:onClick="cancelUpload"
                     android:text="Cancel" />
@@ -76,6 +83,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
-
-
 </android.support.constraint.ConstraintLayout>

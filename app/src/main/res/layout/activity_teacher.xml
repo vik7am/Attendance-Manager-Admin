@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vikrant.attendancemanageradmin.admin.StudentActivity">
+    tools:context="com.example.vikrant.attendancemanageradmin.admin.TeacherActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -76,6 +76,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
-
-
 </android.support.constraint.ConstraintLayout>

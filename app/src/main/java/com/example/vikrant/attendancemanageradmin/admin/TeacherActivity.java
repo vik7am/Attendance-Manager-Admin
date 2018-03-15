@@ -1,4 +1,4 @@
-package com.example.vikrant.attendancemanageradmin;
+package com.example.vikrant.attendancemanageradmin.admin;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,14 +7,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.vikrant.attendancemanageradmin.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,9 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
-public class StudentActivity extends AppCompatActivity {
+public class TeacherActivity extends AppCompatActivity {
 
     ListView listView;
     DatabaseReference databaseReference;
@@ -33,36 +31,36 @@ public class StudentActivity extends AppCompatActivity {
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
-    User user;
-    ArrayList<String> userName;
+    Teacher teacher;
+    ArrayList<String> nameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student);
+        setContentView(R.layout.activity_teacher);
         init();
     }
 
     public void init()
     {
         databaseReference= FirebaseDatabase.getInstance().getReference();
-        listView=(ListView)findViewById(R.id.listView1);
-        editText=(EditText)findViewById(R.id.editText1);
-        linearLayout=(LinearLayout)findViewById(R.id.linearLayout1);
+        listView=findViewById(R.id.listView1);
+        editText=findViewById(R.id.editText1);
+        linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        userName=new ArrayList<String>();
+        nameList=new ArrayList<String>();
         initGlide();
     }
     public void initGlide()
     {
-        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                userName.clear();
+                nameList.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    user=dataSnapshot1.getValue(User.class);
-                    userName.add(user.username);
+                    teacher=dataSnapshot1.getValue(Teacher.class);
+                    nameList.add(teacher.name);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -84,8 +82,8 @@ public class StudentActivity extends AppCompatActivity {
         linearLayout.setVisibility(View.GONE);
         name=editText.getText().toString().toLowerCase();
         userId = databaseReference.push().getKey();
-        User user = new User(name);
-        databaseReference.child("users").child(userId).setValue(user);
+        teacher = new Teacher(name);
+        databaseReference.child("teacher").child(userId).setValue(teacher);
     }
     public void cancelUpload(View view)
     {
@@ -101,9 +99,9 @@ public class StudentActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            if(userName==null)
+            if(nameList==null)
                 return 0;
-            return userName.size();
+            return nameList.size();
         }
 
         @Override
@@ -120,10 +118,10 @@ public class StudentActivity extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view=LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=(TextView)view.findViewById(android.R.id.text1);
-            textView.setText(userName.get(i));
+            textView.setText(nameList.get(i));
             textView.setTextColor(Color.BLACK);
             return view;
         }

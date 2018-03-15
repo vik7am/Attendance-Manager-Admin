@@ -1,34 +1,43 @@
-package com.example.vikrant.attendancemanageradmin;
+package com.example.vikrant.attendancemanageradmin.admin;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
-import com.example.vikrant.attendancemanageradmin.admin.AdminMainActivity;
+import com.example.vikrant.attendancemanageradmin.R;
 
-public class MainActivity extends AppCompatActivity {
+public class AdminMainActivity extends AppCompatActivity {
+
+    //EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    public void admin(View view)
-    {
-        startActivity(new Intent(getApplicationContext(),AdminMainActivity.class));
+        setContentView(R.layout.activity_admin_main);
+        //editText=new EditText(getApplicationContext());
+        //editText.setTextColor(Color.BLACK);
     }
 
     public void students(View view)
     {
-        //startActivity(new Intent(getApplicationContext(),StudentMainActivity.class));
+        startActivity(new Intent(getApplicationContext(),StudentActivity.class));
     }
     public void teachers(View view)
     {
-        //startActivity(new Intent(getApplicationContext(),TeacherMainActivity.class));
+        startActivity(new Intent(getApplicationContext(),TeacherActivity.class));
+    }
+    public void subjects(View view)
+    {
+        startActivity(new Intent(getApplicationContext(),SubjectActivity.class));
+    }
+    public void timetable(View view)
+    {
+
     }
 
 
@@ -46,4 +55,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

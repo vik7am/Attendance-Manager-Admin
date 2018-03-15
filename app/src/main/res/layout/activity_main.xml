@@ -11,14 +11,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:onClick="admin"
+            android:text="Admin" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
-            android:layout_weight="1"
             android:onClick="students"
             android:text="Students" />
 
@@ -27,9 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
-            android:layout_weight="1"
             android:onClick="teachers"
             android:text="Teachers" />
+
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
