@@ -25,14 +25,14 @@ import java.util.ArrayList;
 public class StudentActivity extends AppCompatActivity {
 
     ListView listView;
-    DatabaseReference databaseReference;
+    DatabaseReference db;
     MyAdapter adapter;
     String name,userId;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
     Student student;
-    ArrayList<String> nameList;
+    ArrayList<Student> studentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +43,29 @@ public class StudentActivity extends AppCompatActivity {
 
     public void init()
     {
-        databaseReference= FirebaseDatabase.getInstance().getReference();
+        db= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
         linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        nameList=new ArrayList<String>();
+        studentList=new ArrayList<>();
         initGlide();
     }
     public void initGlide()
     {
-        databaseReference.child("student").addValueEventListener(new ValueEventListener() {
+        db.child("student").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                nameList.clear();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    student=dataSnapshot1.getValue(Student.class);
-                    nameList.add(student.name);
+                studentList.clear();
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    student=rowData.getValue(Student.class);
+                    studentList.add(student);
                 }
                 adapter.notifyDataSetChanged();
             }
-
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
+            public void onCancelled(DatabaseError error) {}
         });
     }
 
@@ -81,9 +78,9 @@ public class StudentActivity extends AppCompatActivity {
     {
         linearLayout.setVisibility(View.GONE);
         name=editText.getText().toString().toLowerCase();
-        userId = databaseReference.push().getKey();
+        userId = db.push().getKey();
         student = new Student(name);
-        databaseReference.child("student").child(userId).setValue(student);
+        db.child("student").child(userId).setValue(student);
     }
     public void cancelUpload(View view)
     {
@@ -99,9 +96,9 @@ public class StudentActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            if(nameList==null)
+            if(studentList==null)
                 return 0;
-            return nameList.size();
+            return studentList.size();
         }
 
         @Override
@@ -120,8 +117,8 @@ public class StudentActivity extends AppCompatActivity {
             {
                 view=LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
-            textView=(TextView)view.findViewById(android.R.id.text1);
-            textView.setText(nameList.get(i));
+            textView=view.findViewById(android.R.id.text1);
+            textView.setText(studentList.get(i).name);
             textView.setTextColor(Color.BLACK);
             return view;
         }

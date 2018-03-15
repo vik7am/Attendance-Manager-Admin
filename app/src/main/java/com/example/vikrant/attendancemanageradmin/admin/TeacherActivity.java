@@ -25,14 +25,14 @@ import java.util.ArrayList;
 public class TeacherActivity extends AppCompatActivity {
 
     ListView listView;
-    DatabaseReference databaseReference;
+    DatabaseReference db;
     MyAdapter adapter;
     String name,userId;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
     Teacher teacher;
-    ArrayList<String> nameList;
+    ArrayList<Teacher> teacherList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,24 +43,24 @@ public class TeacherActivity extends AppCompatActivity {
 
     public void init()
     {
-        databaseReference= FirebaseDatabase.getInstance().getReference();
+        db= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
         linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        nameList=new ArrayList<String>();
+        teacherList=new ArrayList<>();
         initGlide();
     }
     public void initGlide()
     {
-        databaseReference.child("teacher").addValueEventListener(new ValueEventListener() {
+        db.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                nameList.clear();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    teacher=dataSnapshot1.getValue(Teacher.class);
-                    nameList.add(teacher.name);
+                teacherList.clear();
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    teacher=rowData.getValue(Teacher.class);
+                    teacherList.add(teacher);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -81,9 +81,9 @@ public class TeacherActivity extends AppCompatActivity {
     {
         linearLayout.setVisibility(View.GONE);
         name=editText.getText().toString().toLowerCase();
-        userId = databaseReference.push().getKey();
+        userId = db.push().getKey();
         teacher = new Teacher(name);
-        databaseReference.child("teacher").child(userId).setValue(teacher);
+        db.child("teacher").child(userId).setValue(teacher);
     }
     public void cancelUpload(View view)
     {
@@ -99,9 +99,9 @@ public class TeacherActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            if(nameList==null)
+            if(teacherList==null)
                 return 0;
-            return nameList.size();
+            return teacherList.size();
         }
 
         @Override
@@ -121,7 +121,7 @@ public class TeacherActivity extends AppCompatActivity {
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=(TextView)view.findViewById(android.R.id.text1);
-            textView.setText(nameList.get(i));
+            textView.setText(teacherList.get(i).name);
             textView.setTextColor(Color.BLACK);
             return view;
         }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,6 +27,18 @@ import java.util.ArrayList;
 
 public class SubjectActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
 
+    ListView listView;
+    DatabaseReference sdb,tdb;
+    MyAdapter adapter;
+    String name,userId,teacher_id;
+    EditText editText;
+    TextView textView,textView2;
+    LinearLayout linearLayout;
+    Subject subject;
+    Teacher teacher;
+    ArrayList<Subject> subjectList;
+    ArrayList<Teacher> teacherList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,82 +46,68 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
         init();
     }
 
-    ListView listView;
-    DatabaseReference databaseReference,databaseReference2;
-    MyAdapter adapter;
-    String name,userId;
-    EditText editText;
-    TextView textView;
-    LinearLayout linearLayout;
-    Subject subject;
-    Teacher teacher;
-    ArrayList<String> nameList;
-    ArrayList<String> teacherNameList;
+
 
     public void init()
     {
-        databaseReference= FirebaseDatabase.getInstance().getReference();
-        databaseReference2= FirebaseDatabase.getInstance().getReference();
+        sdb= FirebaseDatabase.getInstance().getReference();
+        tdb= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
+        textView2=findViewById(R.id.textView1);
         linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        nameList=new ArrayList<String>();
-        teacherNameList=new ArrayList<String>();
+        subjectList=new ArrayList<Subject>();
+        teacherList=new ArrayList<Teacher>();
         initGlide();
     }
     public void initGlide()
     {
-        databaseReference.child("subject").addValueEventListener(new ValueEventListener() {
+        sdb.child("subject").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                nameList.clear();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    subject=dataSnapshot1.getValue(Subject.class);
-                    nameList.add(subject.name);
+                subjectList.clear();
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    subject=rowData.getValue(Subject.class);
+                    subjectList.add(subject);
                 }
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
+            public void onCancelled(DatabaseError error) {}
         });
 
-        databaseReference.child("teacher").addValueEventListener(new ValueEventListener() {
+        tdb.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                teacherNameList.clear();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    teacher=dataSnapshot1.getValue(Teacher.class);
-                    teacherNameList.add(teacher.name);
+                teacherList.clear();
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    teacher=rowData.getValue(Teacher.class);
+                    teacherList.add(teacher);
+                    teacher.id=rowData.getKey();
                 }
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
+            public void onCancelled(DatabaseError error) {}
         });
     }
 
     public void addData(View view)
     {
         linearLayout.setVisibility(View.VISIBLE);
-
     }
 
     public void selectTeacher(View view)
     {
-
-        int length=teacherNameList.size();
+        int length=teacherList.size();
         int i=0;
         String list[]=new String[length];
-        for(String text:teacherNameList)
-            list[i++]=text;
+        for(Teacher t:teacherList)
+            list[i++]=t.name;
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setItems(list,this);
         builder.show();
@@ -119,9 +116,9 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     {
         linearLayout.setVisibility(View.GONE);
         name=editText.getText().toString().toLowerCase();
-        userId = databaseReference.push().getKey();
-        subject = new Subject(name);
-        databaseReference.child("subject").child(userId).setValue(subject);
+        userId = sdb.push().getKey();
+        subject = new Subject(name,teacher_id);
+        sdb.child("subject").child(userId).setValue(subject);
     }
     public void cancelUpload(View view)
     {
@@ -130,7 +127,9 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        Toast.makeText(this,""+i,Toast.LENGTH_SHORT).show();
+        textView2.setText(teacherList.get(i).name);
+        teacher_id=teacherList.get(i).id;
+        //Toast.makeText(this,""+teacherList.get(i).name,Toast.LENGTH_SHORT).show();
     }
 
     class MyAdapter extends BaseAdapter {
@@ -142,9 +141,9 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
 
         @Override
         public int getCount() {
-            if(nameList==null)
+            if(subjectList==null)
                 return 0;
-            return nameList.size();
+            return subjectList.size();
         }
 
         @Override
@@ -163,8 +162,8 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
             {
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
-            textView=(TextView)view.findViewById(android.R.id.text1);
-            textView.setText(nameList.get(i));
+            textView=view.findViewById(android.R.id.text1);
+            textView.setText(subjectList.get(i).name);
             textView.setTextColor(Color.BLACK);
             return view;
         }
