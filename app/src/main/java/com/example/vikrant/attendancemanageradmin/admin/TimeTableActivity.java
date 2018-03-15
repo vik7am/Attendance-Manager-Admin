@@ -66,7 +66,7 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
     }
     public void initGlide()
     {
-            //startActivity(new Intent(this,TimeTableSettingActivity.class));
+        //startActivity(new Intent(this,TimeTableSettingActivity.class));
         db.child("timetable").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -108,6 +108,14 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
             if(tt.day_of_week==0)
                 currentTimeTableList.add(tt);
         }
+    }
+    public void addData1(View view)
+    {
+
+    }
+    public void addData2(View view)
+    {
+
     }
 
     public void cancelUpload(View view)

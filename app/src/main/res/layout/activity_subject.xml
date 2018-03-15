@@ -35,7 +35,7 @@
                 android:textSize="18sp"
                 android:clickable="true"
                 android:onClick="selectTeacher"
-                android:text="TextView" />
+                android:text="Select Teacher" />
 
             <LinearLayout
                 android:layout_width="match_parent"

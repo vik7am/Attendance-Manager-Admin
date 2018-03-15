@@ -40,6 +40,14 @@ public class AdminMainActivity extends AppCompatActivity {
     {
         startActivity(new Intent(getApplicationContext(),TimeTableActivity.class));
     }
+    public void timetableSetting(View view)
+    {
+        startActivity(new Intent(getApplicationContext(),TimeTableSettingActivity.class));
+    }
+    public void help(View view)
+    {
+        //startActivity(new Intent(getApplicationContext(),TimeTableSettingActivity.class));
+    }
 
 
     @Override
