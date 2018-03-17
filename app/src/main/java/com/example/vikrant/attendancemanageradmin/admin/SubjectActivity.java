@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class SubjectActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
 
     ListView listView;
-    DatabaseReference sdb,tdb;
+    DatabaseReference db;
     MyAdapter adapter;
     String name,userId,teacher_id,teacher_name;
     EditText editText;
@@ -50,8 +50,8 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
 
     public void init()
     {
-        sdb= FirebaseDatabase.getInstance().getReference();
-        tdb= FirebaseDatabase.getInstance().getReference();
+        db= FirebaseDatabase.getInstance().getReference();
+        //tdb= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
         textView2=findViewById(R.id.textView1);
@@ -60,11 +60,11 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
         listView.setAdapter(adapter);
         subjectList=new ArrayList<Subject>();
         teacherList=new ArrayList<Teacher>();
-        initGlide();
+        initDatabase();
     }
-    public void initGlide()
+    public void initDatabase()
     {
-        sdb.child("subject").addValueEventListener(new ValueEventListener() {
+        db.child("subject").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 subjectList.clear();
@@ -79,7 +79,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
             public void onCancelled(DatabaseError error) {}
         });
 
-        tdb.child("teacher").addValueEventListener(new ValueEventListener() {
+        db.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 teacherList.clear();
@@ -116,9 +116,9 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     {
         linearLayout.setVisibility(View.GONE);
         name=editText.getText().toString().toLowerCase();
-        userId = sdb.push().getKey();
-        subject = new Subject(name,teacher_id,teacher_name);
-        sdb.child("subject").child(userId).setValue(subject);
+        userId = db.push().getKey();
+        subject = new Subject(name,teacher_id);
+        db.child("subject").child(userId).setValue(subject);
     }
     public void cancelUpload(View view)
     {
@@ -129,7 +129,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     public void onClick(DialogInterface dialogInterface, int i) {
         textView2.setText(teacherList.get(i).name);
         teacher_id=teacherList.get(i).id;
-        teacher_name=teacherList.get(i).name;
+        //teacher_name=teacherList.get(i).name;
         //Toast.makeText(this,""+teacherList.get(i).name,Toast.LENGTH_SHORT).show();
     }
 

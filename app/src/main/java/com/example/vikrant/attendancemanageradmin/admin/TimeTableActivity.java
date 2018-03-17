@@ -2,7 +2,6 @@ package com.example.vikrant.attendancemanageradmin.admin;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -24,15 +23,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class TimeTableActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
 
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String name,userId,sId,tId;
-    int listViewId;
+    String userId;
+    int listViewId,DAY_OF_WEEK;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
@@ -41,11 +44,16 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
     ArrayList<TimeTable> timeTableList;
     ArrayList<TimeTable> currentTimeTableList;
     ArrayList<Subject> subjectList;
+    HashMap<String,String> hashMap;
+    Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_table);
+        calendar=Calendar.getInstance();
+        DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
+        changeTitle();
         init();
     }
 
@@ -62,11 +70,11 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
         subjectList=new ArrayList<>();
-        initGlide();
+        hashMap=new HashMap<>();
+        initDatabase();
     }
-    public void initGlide()
+    public void initDatabase()
     {
-        //startActivity(new Intent(this,TimeTableSettingActivity.class));
         db.child("timetable").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -92,6 +100,7 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
                     subject=rowData.getValue(Subject.class);
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
+                    hashMap.put(subject.id,subject.name);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -105,17 +114,33 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
         currentTimeTableList.clear();
         for(TimeTable tt:timeTableList)
         {
-            if(tt.day_of_week==0)
+            if(tt.day_of_week==(DAY_OF_WEEK-1))
                 currentTimeTableList.add(tt);
         }
     }
     public void addData1(View view)
     {
-
+        if(DAY_OF_WEEK==1)
+            DAY_OF_WEEK+=7;
+        DAY_OF_WEEK--;
+        changeTitle();
+        currentData();
+        adapter.notifyDataSetChanged();
     }
     public void addData2(View view)
     {
-
+        if(DAY_OF_WEEK==7)
+            DAY_OF_WEEK-=7;
+        DAY_OF_WEEK++;
+        changeTitle();
+        currentData();
+        adapter.notifyDataSetChanged();
+    }
+    public void changeTitle() {
+        Locale usersLocale = Locale.getDefault();
+        DateFormatSymbols dfs = new DateFormatSymbols(usersLocale);
+        String weekdays[] = dfs.getWeekdays();
+        setTitle(weekdays[DAY_OF_WEEK]);
     }
 
     public void cancelUpload(View view)
@@ -143,8 +168,6 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
         userId=timeTable.id;
         timeTable.subject_id=subject.id;
         timeTable.teacher_id=subject.teacher_id;
-        timeTable.subject=subject.name;
-        timeTable.teacher=subject.teacher;
         db.child("timetable").child(userId).setValue(timeTable);
     }
 
@@ -179,8 +202,7 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=view.findViewById(android.R.id.text1);
-            String sub_id=currentTimeTableList.get(i).subject;
-            textView.setText(sub_id);
+            textView.setText(hashMap.get(currentTimeTableList.get(i).subject_id));
             textView.setTextColor(Color.BLACK);
             return view;
         }

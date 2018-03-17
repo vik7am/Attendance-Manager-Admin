@@ -6,7 +6,6 @@ public class Student {
     public String name;
 
     public Student() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public Student(String name) {

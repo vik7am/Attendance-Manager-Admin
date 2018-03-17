@@ -50,9 +50,9 @@ public class TeacherActivity extends AppCompatActivity {
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
         teacherList=new ArrayList<>();
-        initGlide();
+        initDatabase();
     }
-    public void initGlide()
+    public void initDatabase()
     {
         db.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override

@@ -10,20 +10,16 @@ public class TimeTable {
     public int lecture_no;
     public String subject_id;
     public String teacher_id;
-    public String subject;
-    public String teacher;
 
     public TimeTable() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public TimeTable(int day_of_week,int lecture_no,String subject_id,String teacher_id,String subject,String teacher) {
+    public TimeTable(int day_of_week,int lecture_no,String subject_id,String teacher_id) {
         this.day_of_week = day_of_week;
         this.lecture_no = lecture_no;
         this.subject_id = subject_id;
         this.teacher_id = teacher_id;
-        this.subject = subject;
-        this.teacher = teacher;
 
     }
 }

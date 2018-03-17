@@ -50,9 +50,9 @@ public class StudentActivity extends AppCompatActivity {
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
         studentList=new ArrayList<>();
-        initGlide();
+        initDatabase();
     }
-    public void initGlide()
+    public void initDatabase()
     {
         db.child("student").addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,7 +72,6 @@ public class StudentActivity extends AppCompatActivity {
     public void addData(View view)
     {
         linearLayout.setVisibility(View.VISIBLE);
-
     }
     public void uploadData(View view)
     {
