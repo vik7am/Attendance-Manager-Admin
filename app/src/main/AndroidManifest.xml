@@ -21,7 +21,9 @@
         <activity android:name=".admin.TeacherActivity" />
         <activity android:name=".admin.SubjectActivity" />
         <activity android:name=".admin.TimeTableSettingActivity" />
-        <activity android:name=".admin.TimeTableActivity"/>
+        <activity android:name=".admin.TimeTableActivity" />
+        <activity android:name=".teacher.TeacherMainActivity" />
+        <activity android:name=".teacher.TeacherTimeTableActivity"></activity>
     </application>
 
 </manifest>

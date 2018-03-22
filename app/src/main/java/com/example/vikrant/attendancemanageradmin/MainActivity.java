@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.vikrant.attendancemanageradmin.admin.AdminMainActivity;
+import com.example.vikrant.attendancemanageradmin.teacher.TeacherMainActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void teachers(View view)
     {
-        //startActivity(new Intent(getApplicationContext(),TeacherMainActivity.class));
+        startActivity(new Intent(getApplicationContext(),TeacherMainActivity.class));
     }
 
 
