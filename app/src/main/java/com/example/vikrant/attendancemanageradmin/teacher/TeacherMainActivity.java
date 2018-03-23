@@ -22,6 +22,6 @@ public class TeacherMainActivity extends AppCompatActivity {
     }
     public void attendance(View view)
     {
-        startActivity(new Intent(getApplicationContext(),TeacherActivity.class));
+        startActivity(new Intent(getApplicationContext(),TeacherAttendanceActivity.class));
     }
 }

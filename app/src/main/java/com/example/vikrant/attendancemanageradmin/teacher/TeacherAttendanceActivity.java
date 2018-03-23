@@ -2,6 +2,7 @@ package com.example.vikrant.attendancemanageradmin.teacher;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +33,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class TeacherTimeTableActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
+public class TeacherAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
 
     ListView listView;
     DatabaseReference db;
@@ -50,11 +51,12 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
     ArrayList<Subject> subjectList;
     HashMap<String,String> hashMap;
     Calendar calendar;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_time_table);
+        setContentView(R.layout.activity_teacher_attendance);
         calendar=Calendar.getInstance();
         DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
         changeTitle();
@@ -148,24 +150,7 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
         }
         //System.out.println("&&&&&&"+currentTeacherId+"******"+currentTimeTableList.size());
     }
-    public void addData1(View view)
-    {
-        if(DAY_OF_WEEK==1)
-            DAY_OF_WEEK+=7;
-        DAY_OF_WEEK--;
-        changeTitle();
-        currentData();
-        adapter.notifyDataSetChanged();
-    }
-    public void addData2(View view)
-    {
-        if(DAY_OF_WEEK==7)
-            DAY_OF_WEEK-=7;
-        DAY_OF_WEEK++;
-        changeTitle();
-        currentData();
-        adapter.notifyDataSetChanged();
-    }
+
     public void changeTitle() {
         Locale usersLocale = Locale.getDefault();
         DateFormatSymbols dfs = new DateFormatSymbols(usersLocale);
@@ -180,7 +165,14 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-       /*
+        intent=new Intent(this,MarkAttendanceActivity.class);
+        intent.putExtra("DAY_OF_WEEK",DAY_OF_WEEK);
+        intent.putExtra("LECTURE_NO",i);
+        intent.putExtra("SUBJECT_ID",currentTimeTableList.get(i).subject_id);
+        intent.putExtra("TEACHER_ID",currentTimeTableList.get(i).teacher_id);
+        startActivity(intent);
+
+        /*
         listViewId=i;
         int length=subjectList.size();
         int ii=0;

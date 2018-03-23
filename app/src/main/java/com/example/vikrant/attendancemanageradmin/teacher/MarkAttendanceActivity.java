@@ -2,6 +2,7 @@ package com.example.vikrant.attendancemanageradmin.teacher;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.vikrant.attendancemanageradmin.R;
+import com.example.vikrant.attendancemanageradmin.admin.Student;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
 import com.example.vikrant.attendancemanageradmin.admin.Teacher;
 import com.example.vikrant.attendancemanageradmin.admin.TimeTable;
@@ -32,32 +34,43 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class TeacherTimeTableActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
+public class MarkAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
+
 
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
     String userId,currentTeacherId,freeSubject,freeTeacher;
-    int listViewId,DAY_OF_WEEK;
+    int listViewId,DAY_OF_WEEK,LECTURE_NO;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
     TimeTable timeTable;
     Subject subject;
     Teacher teacher;
+    Student student;
     ArrayList<TimeTable> timeTableList;
     ArrayList<TimeTable> currentTimeTableList;
     ArrayList<Subject> subjectList;
+    ArrayList<Student> studentList;
     HashMap<String,String> hashMap;
     Calendar calendar;
+    Intent intent;
+    String SUBJECT_ID,TEACHER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_time_table);
-        calendar=Calendar.getInstance();
+        setContentView(R.layout.activity_mark_attendance);
+        /*calendar= Calendar.getInstance();
         DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
         changeTitle();
+        */
+        intent=getIntent();
+        DAY_OF_WEEK=intent.getIntExtra("DAY_OF_WEEK",0);
+        LECTURE_NO=intent.getIntExtra("LECTURE_NO",0);
+        SUBJECT_ID=intent.getStringExtra("SUBJECT_ID");
+        TEACHER_ID=intent.getStringExtra("TEACHER_ID");
         init();
     }
 
@@ -73,99 +86,31 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
         subjectList=new ArrayList<>();
-        hashMap=new HashMap<>();
+        studentList=new ArrayList<>();
+        //hashMap=new HashMap<>();
         initDatabase();
     }
     public void initDatabase()
     {
-        db.child("timetable").addValueEventListener(new ValueEventListener() {
+        db.child("student").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 timeTableList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
-                    timeTable=rowData.getValue(TimeTable.class);
-                    timeTable.id=rowData.getKey();
-                    timeTableList.add(timeTable);
+                    student=rowData.getValue(Student.class);
+                    student.id=rowData.getKey();
+                    studentList.add(student);
                 }
-                currentData();
                 adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(DatabaseError error) {}
         });
 
-        db.child("subject").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                subjectList.clear();
-                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
-                    subject=rowData.getValue(Subject.class);
-                    subject.id=rowData.getKey();
-                    subjectList.add(subject);
-                    hashMap.put(subject.id,subject.name);
-                    if(subject.name.equals("Free"))
-                        freeSubject=subject.id;
-                }
-                currentData();
-                adapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {}
-        });
-        db.child("teacher").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //subjectList.clear();
-                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
-                    teacher=rowData.getValue(Teacher.class);
-                    teacher.id=rowData.getKey();
-                    //subjectList.add(subject);
-                    //System.out.println(teacher.name);
-                    if(teacher.name.equals("smriti"))
-                        currentTeacherId=teacher.id;
-                    if(teacher.name.equals("Free"))
-                        freeTeacher=teacher.id;
-                }
-                currentData();
-                adapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {}
-        });
     }
 
-    public void currentData()
-    {
-        currentTimeTableList.clear();
-        for(TimeTable tt:timeTableList)
-        {
-            if(tt.day_of_week==(DAY_OF_WEEK-1))
-                if(tt.teacher_id.equals(currentTeacherId))
-                    currentTimeTableList.add(tt);
-                else
-                    currentTimeTableList.add(new TimeTable(tt.day_of_week,tt.lecture_no,freeSubject,freeTeacher));
-        }
-        //System.out.println("&&&&&&"+currentTeacherId+"******"+currentTimeTableList.size());
-    }
-    public void addData1(View view)
-    {
-        if(DAY_OF_WEEK==1)
-            DAY_OF_WEEK+=7;
-        DAY_OF_WEEK--;
-        changeTitle();
-        currentData();
-        adapter.notifyDataSetChanged();
-    }
-    public void addData2(View view)
-    {
-        if(DAY_OF_WEEK==7)
-            DAY_OF_WEEK-=7;
-        DAY_OF_WEEK++;
-        changeTitle();
-        currentData();
-        adapter.notifyDataSetChanged();
-    }
+
     public void changeTitle() {
         Locale usersLocale = Locale.getDefault();
         DateFormatSymbols dfs = new DateFormatSymbols(usersLocale);
@@ -180,21 +125,20 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-       /*
+
         listViewId=i;
         int length=subjectList.size();
         int ii=0;
-        String list[]=new String[length];
-        for(Subject t:subjectList)
-            list[ii++]=t.name;
+        String list[]={"Present","Absent"};
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setItems(list,  this);
         builder.show();
-        */
+
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
+
         /*
         timeTable=currentTimeTableList.get(listViewId);
         subject=subjectList.get(i);
@@ -214,9 +158,9 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
 
         @Override
         public int getCount() {
-            if(currentTimeTableList==null)
+            if(studentList==null)
                 return 0;
-            return currentTimeTableList.size();
+            return studentList.size();
         }
 
         @Override
@@ -236,7 +180,7 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=view.findViewById(android.R.id.text1);
-            textView.setText(hashMap.get(currentTimeTableList.get(i).subject_id));
+            textView.setText(studentList.get(i).name);
             textView.setTextColor(Color.BLACK);
             return view;
         }

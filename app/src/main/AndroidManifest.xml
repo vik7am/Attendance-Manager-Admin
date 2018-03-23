@@ -23,7 +23,9 @@
         <activity android:name=".admin.TimeTableSettingActivity" />
         <activity android:name=".admin.TimeTableActivity" />
         <activity android:name=".teacher.TeacherMainActivity" />
-        <activity android:name=".teacher.TeacherTimeTableActivity"></activity>
+        <activity android:name=".teacher.TeacherTimeTableActivity" />
+        <activity android:name=".teacher.TeacherAttendanceActivity" />
+        <activity android:name=".teacher.MarkAttendanceActivity"></activity>
     </application>
 
 </manifest>
