@@ -55,11 +55,13 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     ArrayList<TimeTable> currentTimeTableList;
     ArrayList<Subject> subjectList;
     ArrayList<Student> studentList;
-    HashMap<String,String> hashMap;
+    ArrayList<Attendance> attendanceList;
+    //HashMap<String,String> hashMap;
     Calendar calendar;
     Intent intent;
     String SUBJECT_ID,TEACHER_ID;
-    boolean present;
+    boolean present,flag;
+    HashMap<String,Boolean> hashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,7 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         SUBJECT_ID=intent.getStringExtra("SUBJECT_ID");
         TEACHER_ID=intent.getStringExtra("TEACHER_ID");
         init();
+        System.out.println(""+Calendar.getInstance().getTime().getDate());
     }
 
     public void init()
@@ -88,9 +91,10 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         listView.setOnItemClickListener(this);
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
+        attendanceList=new ArrayList<>();
         subjectList=new ArrayList<>();
         studentList=new ArrayList<>();
-        //hashMap=new HashMap<>();
+        hashMap=new HashMap<>();
         initDatabase();
     }
     public void initDatabase()
@@ -104,6 +108,32 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
                     student=rowData.getValue(Student.class);
                     student.id=rowData.getKey();
                     studentList.add(student);
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {}
+        });
+        db.child("attendance").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Date d=Calendar.getInstance().getTime();
+                attendanceList.clear();
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    attendance=rowData.getValue(Attendance.class);
+                    if(attendance.lecture_no==LECTURE_NO)
+                        if(attendance.date.getDate()==d.getDate())
+                            if(attendance.date.getMonth()==d.getMonth())
+                            {
+                                attendance.id=rowData.getKey();
+                                attendanceList.add(attendance);
+                                hashMap.put(attendance.student_id,attendance.present);
+                            }
+
+
+
+
+                    //flag=true;
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -145,8 +175,11 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         if(i==0)present=true;
         else present=false;
         Date date = Calendar.getInstance().getTime();
-        userId = db.push().getKey();
-        attendance = new Attendance(student.id,SUBJECT_ID,LECTURE_NO,date,present);
+        if(hashMap.containsKey(studentList.get(listViewId).id)==false)
+            userId = db.push().getKey();
+        else
+            userId = attendanceList.get(listViewId).id;
+        attendance = new Attendance(studentList.get(listViewId).id,SUBJECT_ID,LECTURE_NO,date,present);
         db.child("attendance").child(userId).setValue(attendance);
 
         //System.out.println("Flag"+flag);
@@ -192,7 +225,13 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
             }
             textView=view.findViewById(android.R.id.text1);
             textView.setText(studentList.get(i).name);
-            textView.setTextColor(Color.BLACK);
+            if(hashMap.containsKey(studentList.get(i).id))
+                if(hashMap.get(studentList.get(i).id))
+                    textView.setTextColor(Color.GREEN);
+                else
+                    textView.setTextColor(Color.RED);
+            else
+                textView.setTextColor(Color.BLACK);
             return view;
         }
     }
