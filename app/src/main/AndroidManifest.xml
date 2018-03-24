@@ -25,7 +25,10 @@
         <activity android:name=".teacher.TeacherMainActivity" />
         <activity android:name=".teacher.TeacherTimeTableActivity" />
         <activity android:name=".teacher.TeacherAttendanceActivity" />
-        <activity android:name=".teacher.MarkAttendanceActivity"></activity>
+        <activity android:name=".teacher.MarkAttendanceActivity" />
+        <activity android:name=".student.StudentMainActivity" />
+        <activity android:name=".student.StudentTimeTableActivity" />
+        <activity android:name=".student.StudentAttendanceActivity"></activity>
     </application>
 
 </manifest>

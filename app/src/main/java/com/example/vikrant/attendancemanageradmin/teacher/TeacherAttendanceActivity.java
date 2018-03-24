@@ -165,6 +165,8 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if(currentTimeTableList.get(i).subject_id.equals(freeSubject))
+            return;
         intent=new Intent(this,MarkAttendanceActivity.class);
         intent.putExtra("DAY_OF_WEEK",DAY_OF_WEEK);
         intent.putExtra("LECTURE_NO",i);

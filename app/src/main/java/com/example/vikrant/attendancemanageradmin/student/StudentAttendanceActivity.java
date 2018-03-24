@@ -1,4 +1,4 @@
-package com.example.vikrant.attendancemanageradmin.teacher;
+package com.example.vikrant.attendancemanageradmin.student;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +22,8 @@ import com.example.vikrant.attendancemanageradmin.admin.Student;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
 import com.example.vikrant.attendancemanageradmin.admin.Teacher;
 import com.example.vikrant.attendancemanageradmin.admin.TimeTable;
+import com.example.vikrant.attendancemanageradmin.teacher.Attendance;
+import com.example.vikrant.attendancemanageradmin.teacher.MarkAttendanceActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,13 +37,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MarkAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
-
+public class StudentAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
 
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId,currentTeacherId,freeSubject,freeTeacher;
+    String userId,currentTeacherId,freeSubject,freeTeacher,STUDENT_ID="-L8NxEUhaZ9ucM3waZcX";
     int listViewId,DAY_OF_WEEK,LECTURE_NO;
     EditText editText;
     TextView textView;
@@ -62,22 +63,19 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     String SUBJECT_ID,TEACHER_ID;
     boolean present,flag;
     HashMap<String,Boolean> hashMap;
+    HashMap<String,String> hashMap2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mark_attendance);
-        /*calendar= Calendar.getInstance();
-        DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
-        changeTitle();
-        */
+        setContentView(R.layout.activity_student_attendance);
         intent=getIntent();
         DAY_OF_WEEK=intent.getIntExtra("DAY_OF_WEEK",0);
         LECTURE_NO=intent.getIntExtra("LECTURE_NO",0);
         SUBJECT_ID=intent.getStringExtra("SUBJECT_ID");
         TEACHER_ID=intent.getStringExtra("TEACHER_ID");
+        DAY_OF_WEEK=7;
         init();
-        System.out.println(""+Calendar.getInstance().getTime().getDate());
     }
 
     public void init()
@@ -95,25 +93,30 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         subjectList=new ArrayList<>();
         studentList=new ArrayList<>();
         hashMap=new HashMap<>();
+        hashMap2=new HashMap<>();
         initDatabase();
     }
     public void initDatabase()
     {
-        db.child("student").addValueEventListener(new ValueEventListener() {
+
+        db.child("timetable").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 timeTableList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
-                    student=rowData.getValue(Student.class);
-                    student.id=rowData.getKey();
-                    studentList.add(student);
+                    timeTable=rowData.getValue(TimeTable.class);
+                    timeTable.id=rowData.getKey();
+                    timeTableList.add(timeTable);
                 }
+                currentData();
+                System.out.println("Size"+currentTimeTableList.size());
                 adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(DatabaseError error) {}
         });
+
         db.child("attendance").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -121,29 +124,38 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
                 attendanceList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     attendance=rowData.getValue(Attendance.class);
-                    if(attendance.lecture_no==LECTURE_NO)
+                    if(attendance.student_id.equals(STUDENT_ID))
                         if(attendance.date.getDate()==d.getDate())
                             if(attendance.date.getMonth()==d.getMonth())
                             {
                                 attendance.id=rowData.getKey();
                                 attendanceList.add(attendance);
-                                hashMap.put(attendance.student_id,attendance.present);
+                                hashMap.put(attendance.subject_id,attendance.present);
                             }
-
-
-
-
-                    //flag=true;
                 }
+                //currentData();
                 adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(DatabaseError error) {}
         });
 
-    }
-    public void fun1(View view)
-    {
+        db.child("subject").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                subjectList.clear();
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    subject=rowData.getValue(Subject.class);
+                    subject.id=rowData.getKey();
+                    subjectList.add(subject);
+                    hashMap2.put(subject.id,subject.name);
+                }
+                //currentData();
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {}
+        });
 
     }
 
@@ -154,6 +166,15 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         String weekdays[] = dfs.getWeekdays();
         setTitle(weekdays[DAY_OF_WEEK]);
     }
+    public void currentData()
+    {
+        currentTimeTableList.clear();
+        for(TimeTable tt:timeTableList)
+        {
+            if(tt.day_of_week==(DAY_OF_WEEK-1))
+                currentTimeTableList.add(tt);
+        }
+    }
 
     public void cancelUpload(View view)
     {
@@ -162,20 +183,21 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+        /*
         listViewId=i;
         int length=subjectList.size();
         int ii=0;
         String list[]={"Present","Absent"};
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setItems(list,  this);
+        builder.setItems(list, this);
         builder.show();
-
+        */
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        //db.child("attendance").equals(null);
+
+        /*
         if(i==0)present=true;
         else present=false;
         Date date = Calendar.getInstance().getTime();
@@ -185,7 +207,7 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
             userId = attendanceList.get(listViewId).id;
         attendance = new Attendance(studentList.get(listViewId).id,SUBJECT_ID,LECTURE_NO,date,present);
         db.child("attendance").child(userId).setValue(attendance);
-
+        */
         //System.out.println("Flag"+flag);
         /*
         timeTable=currentTimeTableList.get(listViewId);
@@ -206,9 +228,10 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
 
         @Override
         public int getCount() {
-            if(studentList==null)
+
+            if(currentTimeTableList==null)
                 return 0;
-            return studentList.size();
+            return currentTimeTableList.size();
         }
 
         @Override
@@ -228,9 +251,9 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=view.findViewById(android.R.id.text1);
-            textView.setText(studentList.get(i).name);
-            if(hashMap.containsKey(studentList.get(i).id))
-                if(hashMap.get(studentList.get(i).id))
+            textView.setText(hashMap2.get(currentTimeTableList.get(i).subject_id));
+            if(hashMap.containsKey(currentTimeTableList.get(i).subject_id))
+                if(hashMap.get(currentTimeTableList.get(i).subject_id))
                     textView.setTextColor(Color.GREEN);
                 else
                     textView.setTextColor(Color.RED);
