@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -48,6 +49,7 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     TimeTable timeTable;
     Subject subject;
     Teacher teacher;
+    Attendance attendance;
     Student student;
     ArrayList<TimeTable> timeTableList;
     ArrayList<TimeTable> currentTimeTableList;
@@ -57,6 +59,7 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     Calendar calendar;
     Intent intent;
     String SUBJECT_ID,TEACHER_ID;
+    boolean present;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +141,15 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
+        //db.child("attendance").equals(null);
+        if(i==0)present=true;
+        else present=false;
+        Date date = Calendar.getInstance().getTime();
+        userId = db.push().getKey();
+        attendance = new Attendance(student.id,SUBJECT_ID,LECTURE_NO,date,present);
+        db.child("attendance").child(userId).setValue(attendance);
 
+        //System.out.println("Flag"+flag);
         /*
         timeTable=currentTimeTableList.get(listViewId);
         subject=subjectList.get(i);
