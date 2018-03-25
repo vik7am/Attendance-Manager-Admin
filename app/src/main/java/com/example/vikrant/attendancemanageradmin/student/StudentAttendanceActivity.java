@@ -2,6 +2,7 @@ package com.example.vikrant.attendancemanageradmin.student;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Student;
@@ -25,10 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class StudentAttendanceActivity extends AppCompatActivity{
 
@@ -52,14 +56,37 @@ public class StudentAttendanceActivity extends AppCompatActivity{
     Intent intent;
     HashMap<String,Boolean> hashMap;
     HashMap<String,String> hashMap2;
+    SharedPreferences sp;
+    MyDate date;
+    Date d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_attendance);
         intent=getIntent();
+        //calendar=Calendar.getInstance();
+        //DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
+        sp=getSharedPreferences("data",Context.MODE_PRIVATE);
+        /*d=new Date(sp.getInt("yy", 0), sp.getInt("mm", 0), sp.getInt("dd", 0));
         calendar=Calendar.getInstance();
+        calendar.setTime(d);
+        */
+
+        date=new MyDate(0,0,0);
+        date.DAY_OF_MONTH=sp.getInt("dd", 0);
+        date.MONTH=sp.getInt("mm", 0);
+        date.YEAR=sp.getInt("yy", 0);
+        calendar=Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH,date.DAY_OF_MONTH);
+        calendar.set(Calendar.MONTH,date.MONTH);
+        calendar.set(Calendar.YEAR,date.YEAR);
+
         DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
+        if(DAY_OF_WEEK==0)DAY_OF_WEEK=7;
+        String ss=""+sp.getInt("yy", 0)+":"+sp.getInt("mm", 0)+":"+sp.getInt("dd", 0);
+        Toast.makeText(getApplicationContext(),""+DAY_OF_WEEK+"^"+ss, Toast.LENGTH_SHORT).show();
+        changeTitle();
         init();
     }
 
@@ -104,13 +131,12 @@ public class StudentAttendanceActivity extends AppCompatActivity{
         db.child("attendance").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Date d=Calendar.getInstance().getTime();
                 attendanceList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     attendance=rowData.getValue(Attendance.class);
                     if(attendance.student_id.equals(STUDENT_ID))
-                        if(attendance.date.getDate()==d.getDate())
-                            if(attendance.date.getMonth()==d.getMonth())
+                        if(attendance.date.DAY_OF_MONTH ==date.DAY_OF_MONTH)
+                            if(attendance.date.MONTH==date.MONTH)
                             {
                                 attendance.id=rowData.getKey();
                                 attendanceList.add(attendance);
@@ -139,6 +165,12 @@ public class StudentAttendanceActivity extends AppCompatActivity{
             public void onCancelled(DatabaseError error) {}
         });
 
+    }
+    public void changeTitle() {
+        Locale usersLocale = Locale.getDefault();
+        DateFormatSymbols dfs = new DateFormatSymbols(usersLocale);
+        String weekdays[] = dfs.getWeekdays();
+        setTitle(weekdays[DAY_OF_WEEK]);
     }
 
     public void currentData()
@@ -189,6 +221,8 @@ public class StudentAttendanceActivity extends AppCompatActivity{
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=view.findViewById(android.R.id.text1);
+            //System.out.println(""+currentTimeTableList.get(i).subject_id);
+            //Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_SHORT).show();
             textView.setText(hashMap2.get(currentTimeTableList.get(i).subject_id));
             if(hashMap.containsKey(currentTimeTableList.get(i).subject_id))
                 if(hashMap.get(currentTimeTableList.get(i).subject_id))

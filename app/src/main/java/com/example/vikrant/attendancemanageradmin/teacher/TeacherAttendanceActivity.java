@@ -2,6 +2,7 @@ package com.example.vikrant.attendancemanageradmin.teacher;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,11 +15,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
 import com.example.vikrant.attendancemanageradmin.admin.Teacher;
 import com.example.vikrant.attendancemanageradmin.admin.TimeTable;
+import com.example.vikrant.attendancemanageradmin.student.MyDate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,13 +53,26 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
     Calendar calendar;
     Intent intent;
     String TEACHER_ID;
+    SharedPreferences sp;
+    MyDate date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_attendance);
+        //calendar=Calendar.getInstance();
+        //DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
+        sp=getSharedPreferences("data",Context.MODE_PRIVATE);
+        //date=new Date(sp.getInt("yy", 0), sp.getInt("mm", 0), sp.getInt("dd", 0));
         calendar=Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH,sp.getInt("dd",0));
+        calendar.set(Calendar.MONTH,sp.getInt("mm",0));
+        calendar.set(Calendar.YEAR,sp.getInt("yy",0));
         DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
+        //if(DAY_OF_WEEK==0)DAY_OF_WEEK=7;
+        String ss=""+sp.getInt("yy", 0)+":"+sp.getInt("mm", 0)+":"+sp.getInt("dd", 0);
+        Toast.makeText(getApplicationContext(),""+DAY_OF_WEEK+"^"+ss,Toast.LENGTH_SHORT).show();
         changeTitle();
         init();
     }

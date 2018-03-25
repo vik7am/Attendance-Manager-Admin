@@ -3,6 +3,7 @@ package com.example.vikrant.attendancemanageradmin.teacher;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Student;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
 import com.example.vikrant.attendancemanageradmin.admin.TimeTable;
+import com.example.vikrant.attendancemanageradmin.student.MyDate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +55,8 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     Intent intent;
     String SUBJECT_ID,TEACHER_ID;
     boolean present;
+    MyDate date;
+    SharedPreferences sp;
     HashMap<String,Boolean> hashMap;
 
     @Override
@@ -64,8 +68,14 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         LECTURE_NO=intent.getIntExtra("LECTURE_NO",0);
         SUBJECT_ID=intent.getStringExtra("SUBJECT_ID");
         TEACHER_ID=intent.getStringExtra("TEACHER_ID");
+        sp=getSharedPreferences("data",Context.MODE_PRIVATE);
+        //date=new Date(sp.getInt("yy", 0), sp.getInt("mm", 0), sp.getInt("dd", 0));
+        date=new MyDate(0,0,0);
+        date.DAY_OF_MONTH=sp.getInt("dd", 0);
+        date.MONTH=sp.getInt("mm", 0);
+        date.YEAR=sp.getInt("yy", 0);
         init();
-        System.out.println(""+Calendar.getInstance().getTime().getDate());
+        //System.out.println(""+Calendar.getInstance().getTime().getDate());
     }
 
     public void init()
@@ -105,13 +115,13 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         db.child("attendance").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Date d=Calendar.getInstance().getTime();
+                //Date d=Calendar.getInstance().getTime();
                 attendanceList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     attendance=rowData.getValue(Attendance.class);
                     if(attendance.lecture_no==LECTURE_NO)
-                        if(attendance.date.getDate()==d.getDate())
-                            if(attendance.date.getMonth()==d.getMonth())
+                        if(attendance.date.DAY_OF_MONTH==date.DAY_OF_MONTH)
+                            if(attendance.date.MONTH==date.MONTH)
                             {
                                 attendance.id=rowData.getKey();
                                 attendanceList.add(attendance);
@@ -150,7 +160,8 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     public void onClick(DialogInterface dialogInterface, int i) {
         if(i==0)present=true;
         else present=false;
-        Date date = Calendar.getInstance().getTime();
+        // = Calendar.getInstance().getTime();
+
         if(hashMap.containsKey(studentList.get(listViewId).id)==false)
             userId = db.push().getKey();
         else
