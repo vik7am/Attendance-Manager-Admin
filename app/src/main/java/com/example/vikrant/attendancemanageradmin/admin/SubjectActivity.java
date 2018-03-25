@@ -119,6 +119,8 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
         userId = db.push().getKey();
         subject = new Subject(name,teacher_id);
         db.child("subject").child(userId).setValue(subject);
+        editText.setText("");
+        textView2.setText("Select Teacher");
     }
     public void cancelUpload(View view)
     {

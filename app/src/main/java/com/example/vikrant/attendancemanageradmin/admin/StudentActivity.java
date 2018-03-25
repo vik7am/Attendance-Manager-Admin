@@ -80,6 +80,7 @@ public class StudentActivity extends AppCompatActivity {
         userId = db.push().getKey();
         student = new Student(name);
         db.child("student").child(userId).setValue(student);
+        editText.setText("");
     }
     public void cancelUpload(View view)
     {

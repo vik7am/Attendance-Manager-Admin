@@ -42,7 +42,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements Adap
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId,currentTeacherId,freeSubject,freeTeacher,STUDENT_ID="-L8NxEUhaZ9ucM3waZcX";
+    String userId,currentTeacherId,freeSubject,freeTeacher,STUDENT_ID;
     int listViewId,DAY_OF_WEEK,LECTURE_NO;
     EditText editText;
     TextView textView;
@@ -70,16 +70,19 @@ public class StudentAttendanceActivity extends AppCompatActivity implements Adap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_attendance);
         intent=getIntent();
-        DAY_OF_WEEK=intent.getIntExtra("DAY_OF_WEEK",0);
+        /*DAY_OF_WEEK=intent.getIntExtra("DAY_OF_WEEK",0);
         LECTURE_NO=intent.getIntExtra("LECTURE_NO",0);
         SUBJECT_ID=intent.getStringExtra("SUBJECT_ID");
-        TEACHER_ID=intent.getStringExtra("TEACHER_ID");
-        DAY_OF_WEEK=7;
+        TEACHER_ID=intent.getStringExtra("TEACHER_ID");*/
+        calendar=Calendar.getInstance();
+        DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
+        //DAY_OF_WEEK=7;
         init();
     }
 
     public void init()
     {
+        STUDENT_ID=getSharedPreferences("data",Context.MODE_PRIVATE).getString("id","");
         db= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
@@ -108,9 +111,10 @@ public class StudentAttendanceActivity extends AppCompatActivity implements Adap
                     timeTable=rowData.getValue(TimeTable.class);
                     timeTable.id=rowData.getKey();
                     timeTableList.add(timeTable);
+
                 }
                 currentData();
-                System.out.println("Size"+currentTimeTableList.size());
+                //System.out.println("Size"+currentTimeTableList.size());
                 adapter.notifyDataSetChanged();
             }
             @Override
@@ -149,8 +153,10 @@ public class StudentAttendanceActivity extends AppCompatActivity implements Adap
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
                     hashMap2.put(subject.id,subject.name);
+
                 }
                 //currentData();
+
                 adapter.notifyDataSetChanged();
             }
             @Override
@@ -251,6 +257,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements Adap
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=view.findViewById(android.R.id.text1);
+            //System.out.println(currentTimeTableList.get(i).subject_id);
             textView.setText(hashMap2.get(currentTimeTableList.get(i).subject_id));
             if(hashMap.containsKey(currentTimeTableList.get(i).subject_id))
                 if(hashMap.get(currentTimeTableList.get(i).subject_id))

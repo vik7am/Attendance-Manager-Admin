@@ -84,6 +84,7 @@ public class TeacherActivity extends AppCompatActivity {
         userId = db.push().getKey();
         teacher = new Teacher(name);
         db.child("teacher").child(userId).setValue(teacher);
+        editText.setText("");
     }
     public void cancelUpload(View view)
     {

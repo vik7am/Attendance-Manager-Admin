@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
@@ -38,7 +39,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId,currentTeacherId,freeSubject,freeTeacher;
+    String userId;
     int listViewId,DAY_OF_WEEK;
     EditText editText;
     TextView textView;
@@ -52,6 +53,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
     HashMap<String,String> hashMap;
     Calendar calendar;
     Intent intent;
+    String TEACHER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,10 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
 
     public void init()
     {
+        TEACHER_ID=getSharedPreferences("data",Context.MODE_PRIVATE).getString("id","");
+        //Toast.makeText(this,""+TEACHER_ID,Toast.LENGTH_LONG).show();
+        /*freeTeacher=getSharedPreferences("data",Context.MODE_PRIVATE).getString("FREE_TEACHER","");
+        freeSubject=getSharedPreferences("data",Context.MODE_PRIVATE).getString("FREE_SUBJECT","");*/
         db= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
@@ -106,8 +112,6 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
                     hashMap.put(subject.id,subject.name);
-                    if(subject.name.equals("Free"))
-                        freeSubject=subject.id;
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -124,10 +128,8 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
                     teacher.id=rowData.getKey();
                     //subjectList.add(subject);
                     //System.out.println(teacher.name);
-                    if(teacher.name.equals("smriti"))
-                        currentTeacherId=teacher.id;
-                    if(teacher.name.equals("Free"))
-                        freeTeacher=teacher.id;
+                    /*if(teacher.id.equals(TEACHER_ID))
+                        currentTeacherId=teacher.id;*/
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -143,10 +145,10 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
         for(TimeTable tt:timeTableList)
         {
             if(tt.day_of_week==(DAY_OF_WEEK-1))
-                if(tt.teacher_id.equals(currentTeacherId))
+                if(tt.teacher_id.equals(TEACHER_ID))
                     currentTimeTableList.add(tt);
                 else
-                    currentTimeTableList.add(new TimeTable(tt.day_of_week,tt.lecture_no,freeSubject,freeTeacher));
+                    currentTimeTableList.add(new TimeTable(tt.day_of_week,tt.lecture_no,"0","0"));
         }
         //System.out.println("&&&&&&"+currentTeacherId+"******"+currentTimeTableList.size());
     }
@@ -165,13 +167,13 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if(currentTimeTableList.get(i).subject_id.equals(freeSubject))
+        if(currentTimeTableList.get(i).subject_id.equals("0"))
             return;
         intent=new Intent(this,MarkAttendanceActivity.class);
         intent.putExtra("DAY_OF_WEEK",DAY_OF_WEEK);
         intent.putExtra("LECTURE_NO",i);
         intent.putExtra("SUBJECT_ID",currentTimeTableList.get(i).subject_id);
-        intent.putExtra("TEACHER_ID",currentTimeTableList.get(i).teacher_id);
+        intent.putExtra("TEACHER_ID",/*currentTimeTableList.get(i).teacher_id*/TEACHER_ID);
         startActivity(intent);
 
         /*

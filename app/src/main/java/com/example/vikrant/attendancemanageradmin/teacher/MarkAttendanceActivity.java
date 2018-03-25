@@ -41,7 +41,7 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId,currentTeacherId,freeSubject,freeTeacher;
+    String userId,currentTeacherId;
     int listViewId,DAY_OF_WEEK,LECTURE_NO;
     EditText editText;
     TextView textView;
@@ -129,11 +129,6 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
                                 attendanceList.add(attendance);
                                 hashMap.put(attendance.student_id,attendance.present);
                             }
-
-
-
-
-                    //flag=true;
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -164,8 +159,6 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         listViewId=i;
-        int length=subjectList.size();
-        int ii=0;
         String list[]={"Present","Absent"};
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setItems(list,  this);

@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 teacherList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     teacher=rowData.getValue(Teacher.class);
-                    //teacher.id=rowData.getKey();
+                    teacher.id=rowData.getKey();
                     teacherList.put(teacher.name,teacher.id);
                 }
             }
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 studentList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     student=rowData.getValue(Student.class);
-                    //student.id=rowData.getKey();
+                    student.id=rowData.getKey();
                     studentList.put(student.name,student.id);
                 }
             }
