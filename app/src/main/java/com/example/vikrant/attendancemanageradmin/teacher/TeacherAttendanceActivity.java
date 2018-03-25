@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
@@ -51,28 +50,19 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
     ArrayList<Subject> subjectList;
     HashMap<String,String> hashMap;
     Calendar calendar;
-    Intent intent;
     String TEACHER_ID;
-    SharedPreferences sp;
-    MyDate date;
-
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_attendance);
-        //calendar=Calendar.getInstance();
-        //DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
-        sp=getSharedPreferences("data",Context.MODE_PRIVATE);
-        //date=new Date(sp.getInt("yy", 0), sp.getInt("mm", 0), sp.getInt("dd", 0));
         calendar=Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH,sp.getInt("dd",0));
-        calendar.set(Calendar.MONTH,sp.getInt("mm",0));
-        calendar.set(Calendar.YEAR,sp.getInt("yy",0));
+        intent=getIntent();
+        calendar.set(Calendar.DAY_OF_MONTH,intent.getIntExtra("dd",0));
+        calendar.set(Calendar.MONTH,intent.getIntExtra("mm",0));
+        calendar.set(Calendar.YEAR,intent.getIntExtra("yy",0));
         DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
-        //if(DAY_OF_WEEK==0)DAY_OF_WEEK=7;
-        String ss=""+sp.getInt("yy", 0)+":"+sp.getInt("mm", 0)+":"+sp.getInt("dd", 0);
-        Toast.makeText(getApplicationContext(),""+DAY_OF_WEEK+"^"+ss,Toast.LENGTH_SHORT).show();
         changeTitle();
         init();
     }
@@ -177,6 +167,9 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
         intent.putExtra("LECTURE_NO",i);
         intent.putExtra("SUBJECT_ID",currentTimeTableList.get(i).subject_id);
         intent.putExtra("TEACHER_ID",/*currentTimeTableList.get(i).teacher_id*/TEACHER_ID);
+        intent.putExtra("dd",calendar.get(Calendar.DAY_OF_MONTH));
+        intent.putExtra("mm",calendar.get(Calendar.MONTH));
+        intent.putExtra("yy",calendar.get(Calendar.YEAR));
         startActivity(intent);
     }
 

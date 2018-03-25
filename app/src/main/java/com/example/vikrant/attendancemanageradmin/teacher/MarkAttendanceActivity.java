@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 public class MarkAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
@@ -55,8 +54,8 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     Intent intent;
     String SUBJECT_ID,TEACHER_ID;
     boolean present;
+    Calendar calendar;
     MyDate date;
-    SharedPreferences sp;
     HashMap<String,Boolean> hashMap;
 
     @Override
@@ -68,14 +67,11 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         LECTURE_NO=intent.getIntExtra("LECTURE_NO",0);
         SUBJECT_ID=intent.getStringExtra("SUBJECT_ID");
         TEACHER_ID=intent.getStringExtra("TEACHER_ID");
-        sp=getSharedPreferences("data",Context.MODE_PRIVATE);
-        //date=new Date(sp.getInt("yy", 0), sp.getInt("mm", 0), sp.getInt("dd", 0));
-        date=new MyDate(0,0,0);
-        date.DAY_OF_MONTH=sp.getInt("dd", 0);
-        date.MONTH=sp.getInt("mm", 0);
-        date.YEAR=sp.getInt("yy", 0);
+        calendar=Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH,intent.getIntExtra("dd",0));
+        calendar.set(Calendar.MONTH,intent.getIntExtra("mm",0));
+        calendar.set(Calendar.YEAR,intent.getIntExtra("yy",0));
         init();
-        //System.out.println(""+Calendar.getInstance().getTime().getDate());
     }
 
     public void init()
@@ -115,13 +111,12 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         db.child("attendance").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Date d=Calendar.getInstance().getTime();
                 attendanceList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     attendance=rowData.getValue(Attendance.class);
                     if(attendance.lecture_no==LECTURE_NO)
-                        if(attendance.date.DAY_OF_MONTH==date.DAY_OF_MONTH)
-                            if(attendance.date.MONTH==date.MONTH)
+                        if(attendance.date.DAY_OF_MONTH==calendar.get(Calendar.DAY_OF_MONTH))
+                            if(attendance.date.MONTH==calendar.get(Calendar.MONTH))
                             {
                                 attendance.id=rowData.getKey();
                                 attendanceList.add(attendance);
@@ -160,8 +155,7 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     public void onClick(DialogInterface dialogInterface, int i) {
         if(i==0)present=true;
         else present=false;
-        // = Calendar.getInstance().getTime();
-
+        date=new MyDate(calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.MONTH),calendar.get(Calendar.YEAR));
         if(hashMap.containsKey(studentList.get(listViewId).id)==false)
             userId = db.push().getKey();
         else

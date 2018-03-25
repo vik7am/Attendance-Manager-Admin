@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Student;
@@ -56,36 +55,17 @@ public class StudentAttendanceActivity extends AppCompatActivity{
     Intent intent;
     HashMap<String,Boolean> hashMap;
     HashMap<String,String> hashMap2;
-    SharedPreferences sp;
-    MyDate date;
-    Date d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_attendance);
         intent=getIntent();
-        //calendar=Calendar.getInstance();
-        //DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
-        sp=getSharedPreferences("data",Context.MODE_PRIVATE);
-        /*d=new Date(sp.getInt("yy", 0), sp.getInt("mm", 0), sp.getInt("dd", 0));
         calendar=Calendar.getInstance();
-        calendar.setTime(d);
-        */
-
-        date=new MyDate(0,0,0);
-        date.DAY_OF_MONTH=sp.getInt("dd", 0);
-        date.MONTH=sp.getInt("mm", 0);
-        date.YEAR=sp.getInt("yy", 0);
-        calendar=Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH,date.DAY_OF_MONTH);
-        calendar.set(Calendar.MONTH,date.MONTH);
-        calendar.set(Calendar.YEAR,date.YEAR);
-
+        calendar.set(Calendar.DAY_OF_MONTH,intent.getIntExtra("dd",0));
+        calendar.set(Calendar.MONTH,intent.getIntExtra("mm",0));
+        calendar.set(Calendar.YEAR,intent.getIntExtra("yy",0));
         DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
-        if(DAY_OF_WEEK==0)DAY_OF_WEEK=7;
-        String ss=""+sp.getInt("yy", 0)+":"+sp.getInt("mm", 0)+":"+sp.getInt("dd", 0);
-        Toast.makeText(getApplicationContext(),""+DAY_OF_WEEK+"^"+ss, Toast.LENGTH_SHORT).show();
         changeTitle();
         init();
     }
@@ -110,7 +90,6 @@ public class StudentAttendanceActivity extends AppCompatActivity{
     }
     public void initDatabase()
     {
-
         db.child("timetable").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -135,8 +114,8 @@ public class StudentAttendanceActivity extends AppCompatActivity{
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     attendance=rowData.getValue(Attendance.class);
                     if(attendance.student_id.equals(STUDENT_ID))
-                        if(attendance.date.DAY_OF_MONTH ==date.DAY_OF_MONTH)
-                            if(attendance.date.MONTH==date.MONTH)
+                        if(attendance.date.DAY_OF_MONTH ==calendar.get(Calendar.DAY_OF_MONTH))
+                            if(attendance.date.MONTH==calendar.get(Calendar.MONTH))
                             {
                                 attendance.id=rowData.getKey();
                                 attendanceList.add(attendance);
@@ -221,8 +200,6 @@ public class StudentAttendanceActivity extends AppCompatActivity{
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
             textView=view.findViewById(android.R.id.text1);
-            //System.out.println(""+currentTimeTableList.get(i).subject_id);
-            //Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_SHORT).show();
             textView.setText(hashMap2.get(currentTimeTableList.get(i).subject_id));
             if(hashMap.containsKey(currentTimeTableList.get(i).subject_id))
                 if(hashMap.get(currentTimeTableList.get(i).subject_id))
