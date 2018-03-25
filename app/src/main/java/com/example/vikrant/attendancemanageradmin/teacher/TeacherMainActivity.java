@@ -15,6 +15,7 @@ public class TeacherMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_main);
+        setTitle("Teacher");
     }
     public void timetable(View view)
     {
