@@ -32,13 +32,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class StudentTimeTableActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
+public class StudentTimeTableActivity extends AppCompatActivity {
 
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId;
-    int listViewId,DAY_OF_WEEK;
+    int DAY_OF_WEEK;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
@@ -68,7 +67,6 @@ public class StudentTimeTableActivity extends AppCompatActivity implements Adapt
         linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
         subjectList=new ArrayList<>();
@@ -150,32 +148,7 @@ public class StudentTimeTableActivity extends AppCompatActivity implements Adapt
         linearLayout.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        /*
-        listViewId=i;
-        int length=subjectList.size();
-        int ii=0;
-        String list[]=new String[length];
-        for(Subject t:subjectList)
-            list[ii++]=t.name;
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setItems(list,  this);
-        builder.show();
-        */
-    }
 
-    @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
-        /*
-        timeTable=currentTimeTableList.get(listViewId);
-        subject=subjectList.get(i);
-        userId=timeTable.id;
-        timeTable.subject_id=subject.id;
-        timeTable.teacher_id=subject.teacher_id;
-        db.child("timetable").child(userId).setValue(timeTable);
-        */
-    }
 
     class MyAdapter extends BaseAdapter {
         Context context;

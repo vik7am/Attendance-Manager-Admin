@@ -3,7 +3,6 @@ package com.example.vikrant.attendancemanageradmin;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.admin.AdminMainActivity;
 import com.example.vikrant.attendancemanageradmin.admin.Student;
-import com.example.vikrant.attendancemanageradmin.admin.Subject;
 import com.example.vikrant.attendancemanageradmin.admin.Teacher;
 import com.example.vikrant.attendancemanageradmin.student.StudentMainActivity;
 import com.example.vikrant.attendancemanageradmin.teacher.TeacherMainActivity;
@@ -24,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     Student student;
     HashMap<String,String> teacherList;
     HashMap<String,String> studentList;
-    SharedPreferences s;
     SharedPreferences.Editor editor;
 
     @Override
@@ -50,22 +46,18 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view)
     {
         username=editText.getText().toString();
-        //System.out.println(username+"[]"+ADMIN);
-        s=getSharedPreferences("data", Context.MODE_PRIVATE);
-        editor=s.edit();
+        editor=getSharedPreferences("data", Context.MODE_PRIVATE).edit();
         if(username.equals(ADMIN))
         {
             editor.putString("id","admin");
             editor.commit();
             startActivity(new Intent(getApplicationContext(),AdminMainActivity.class));
-
         }
         else if(studentList.containsKey(username))
         {
             editor.putString("id",studentList.get(username));
             editor.commit();
             startActivity(new Intent(getApplicationContext(),StudentMainActivity.class));
-
         }
         else if(teacherList.containsKey(username))
         {
@@ -77,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(this, "Incorrect Username", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     public void initDatabase()
@@ -90,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         db.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 teacherList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     teacher=rowData.getValue(Teacher.class);
@@ -105,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         db.child("student").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 studentList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     student=rowData.getValue(Student.class);
@@ -117,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError error) {}
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

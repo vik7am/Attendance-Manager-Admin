@@ -1,15 +1,12 @@
 package com.example.vikrant.attendancemanageradmin.teacher;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,13 +29,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class TeacherTimeTableActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
+public class TeacherTimeTableActivity extends AppCompatActivity {
 
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId,currentTeacherId,freeSubject,freeTeacher;
-    int listViewId,DAY_OF_WEEK;
+    int DAY_OF_WEEK;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
@@ -50,6 +46,7 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
     ArrayList<Subject> subjectList;
     HashMap<String,String> hashMap;
     Calendar calendar;
+    String TEACHER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +60,13 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
 
     public void init()
     {
+        TEACHER_ID=getSharedPreferences("data",Context.MODE_PRIVATE).getString("id","");
         db= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
         linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
         subjectList=new ArrayList<>();
@@ -104,8 +101,6 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
                     hashMap.put(subject.id,subject.name);
-                    if(subject.name.equals("Free"))
-                        freeSubject=subject.id;
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -116,16 +111,9 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
         db.child("teacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //subjectList.clear();
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     teacher=rowData.getValue(Teacher.class);
                     teacher.id=rowData.getKey();
-                    //subjectList.add(subject);
-                    //System.out.println(teacher.name);
-                    if(teacher.name.equals("smriti"))
-                        currentTeacherId=teacher.id;
-                    if(teacher.name.equals("Free"))
-                        freeTeacher=teacher.id;
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -141,12 +129,11 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
         for(TimeTable tt:timeTableList)
         {
             if(tt.day_of_week==(DAY_OF_WEEK-1))
-                if(tt.teacher_id.equals(currentTeacherId))
+                if(tt.teacher_id.equals(TEACHER_ID))
                     currentTimeTableList.add(tt);
                 else
-                    currentTimeTableList.add(new TimeTable(tt.day_of_week,tt.lecture_no,freeSubject,freeTeacher));
+                    currentTimeTableList.add(new TimeTable(tt.day_of_week,tt.lecture_no,"0","0"));
         }
-        //System.out.println("&&&&&&"+currentTeacherId+"******"+currentTimeTableList.size());
     }
     public void addData1(View view)
     {
@@ -178,32 +165,6 @@ public class TeacherTimeTableActivity extends AppCompatActivity implements Adapt
         linearLayout.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-       /*
-        listViewId=i;
-        int length=subjectList.size();
-        int ii=0;
-        String list[]=new String[length];
-        for(Subject t:subjectList)
-            list[ii++]=t.name;
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setItems(list,  this);
-        builder.show();
-        */
-    }
-
-    @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
-        /*
-        timeTable=currentTimeTableList.get(listViewId);
-        subject=subjectList.get(i);
-        userId=timeTable.id;
-        timeTable.subject_id=subject.id;
-        timeTable.teacher_id=subject.teacher_id;
-        db.child("timetable").child(userId).setValue(timeTable);
-        */
-    }
 
     class MyAdapter extends BaseAdapter {
         Context context;

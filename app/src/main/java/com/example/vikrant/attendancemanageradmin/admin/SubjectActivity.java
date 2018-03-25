@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.vikrant.attendancemanageradmin.R;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +29,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String name,userId,teacher_id,teacher_name;
+    String name,userId,teacher_id;
     EditText editText;
     TextView textView,textView2;
     LinearLayout linearLayout;
@@ -51,15 +50,14 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     public void init()
     {
         db= FirebaseDatabase.getInstance().getReference();
-        //tdb= FirebaseDatabase.getInstance().getReference();
         listView=findViewById(R.id.listView1);
         editText=findViewById(R.id.editText1);
         textView2=findViewById(R.id.textView1);
         linearLayout=findViewById(R.id.linearLayout1);
         adapter=new MyAdapter(getApplicationContext());
         listView.setAdapter(adapter);
-        subjectList=new ArrayList<Subject>();
-        teacherList=new ArrayList<Teacher>();
+        subjectList=new ArrayList<>();
+        teacherList=new ArrayList<>();
         initDatabase();
     }
     public void initDatabase()
@@ -131,8 +129,6 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     public void onClick(DialogInterface dialogInterface, int i) {
         textView2.setText(teacherList.get(i).name);
         teacher_id=teacherList.get(i).id;
-        //teacher_name=teacherList.get(i).name;
-        //Toast.makeText(this,""+teacherList.get(i).name,Toast.LENGTH_SHORT).show();
     }
 
     class MyAdapter extends BaseAdapter {

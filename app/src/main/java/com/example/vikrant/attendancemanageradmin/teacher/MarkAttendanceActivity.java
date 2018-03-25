@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Student;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
-import com.example.vikrant.attendancemanageradmin.admin.Teacher;
 import com.example.vikrant.attendancemanageradmin.admin.TimeTable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,12 +27,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class MarkAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener{
 
@@ -41,14 +38,11 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     ListView listView;
     DatabaseReference db;
     MyAdapter adapter;
-    String userId,currentTeacherId;
+    String userId;
     int listViewId,DAY_OF_WEEK,LECTURE_NO;
     EditText editText;
     TextView textView;
     LinearLayout linearLayout;
-    TimeTable timeTable;
-    Subject subject;
-    Teacher teacher;
     Attendance attendance;
     Student student;
     ArrayList<TimeTable> timeTableList;
@@ -56,21 +50,15 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
     ArrayList<Subject> subjectList;
     ArrayList<Student> studentList;
     ArrayList<Attendance> attendanceList;
-    //HashMap<String,String> hashMap;
-    Calendar calendar;
     Intent intent;
     String SUBJECT_ID,TEACHER_ID;
-    boolean present,flag;
+    boolean present;
     HashMap<String,Boolean> hashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mark_attendance);
-        /*calendar= Calendar.getInstance();
-        DAY_OF_WEEK=calendar.get(Calendar.DAY_OF_WEEK);
-        changeTitle();
-        */
         intent=getIntent();
         DAY_OF_WEEK=intent.getIntExtra("DAY_OF_WEEK",0);
         LECTURE_NO=intent.getIntExtra("LECTURE_NO",0);
@@ -142,14 +130,6 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
 
     }
 
-
-    public void changeTitle() {
-        Locale usersLocale = Locale.getDefault();
-        DateFormatSymbols dfs = new DateFormatSymbols(usersLocale);
-        String weekdays[] = dfs.getWeekdays();
-        setTitle(weekdays[DAY_OF_WEEK]);
-    }
-
     public void cancelUpload(View view)
     {
         linearLayout.setVisibility(View.GONE);
@@ -168,7 +148,6 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        //db.child("attendance").equals(null);
         if(i==0)present=true;
         else present=false;
         Date date = Calendar.getInstance().getTime();
@@ -178,16 +157,6 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
             userId = attendanceList.get(listViewId).id;
         attendance = new Attendance(studentList.get(listViewId).id,SUBJECT_ID,LECTURE_NO,date,present);
         db.child("attendance").child(userId).setValue(attendance);
-
-        //System.out.println("Flag"+flag);
-        /*
-        timeTable=currentTimeTableList.get(listViewId);
-        subject=subjectList.get(i);
-        userId=timeTable.id;
-        timeTable.subject_id=subject.id;
-        timeTable.teacher_id=subject.teacher_id;
-        db.child("timetable").child(userId).setValue(timeTable);
-        */
     }
 
     class MyAdapter extends BaseAdapter {

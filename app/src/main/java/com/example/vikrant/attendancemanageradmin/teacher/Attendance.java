@@ -2,10 +2,6 @@ package com.example.vikrant.attendancemanageradmin.teacher;
 
 import java.util.Date;
 
-/**
- * Created by vikrant on 24-03-2018.
- */
-
 public class Attendance {
     public String id;
     public int lecture_no;

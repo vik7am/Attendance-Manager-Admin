@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.vikrant.attendancemanageradmin.R;
-import com.example.vikrant.attendancemanageradmin.admin.StudentActivity;
-import com.example.vikrant.attendancemanageradmin.admin.TeacherActivity;
 
 public class TeacherMainActivity extends AppCompatActivity {
 

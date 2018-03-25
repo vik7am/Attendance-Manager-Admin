@@ -1,9 +1,5 @@
 package com.example.vikrant.attendancemanageradmin.admin;
 
-/**
- * Created by vikrant on 15-03-2018.
- */
-
 public class Subject {
     public String id;
     public String name;

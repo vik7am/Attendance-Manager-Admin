@@ -11,7 +11,6 @@ import com.example.vikrant.attendancemanageradmin.R;
 
 public class AdminMainActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +40,8 @@ public class AdminMainActivity extends AppCompatActivity {
     }
     public void help(View view)
     {
-        //startActivity(new Intent(getApplicationContext(),TimeTableSettingActivity.class));
-    }
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,6 +57,4 @@ public class AdminMainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

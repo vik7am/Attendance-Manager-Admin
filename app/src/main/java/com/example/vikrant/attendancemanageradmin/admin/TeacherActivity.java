@@ -66,9 +66,7 @@ public class TeacherActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
+            public void onCancelled(DatabaseError error) {}
         });
     }
 
@@ -121,7 +119,7 @@ public class TeacherActivity extends AppCompatActivity {
             {
                 view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
             }
-            textView=(TextView)view.findViewById(android.R.id.text1);
+            textView=view.findViewById(android.R.id.text1);
             textView.setText(teacherList.get(i).name);
             textView.setTextColor(Color.BLACK);
             return view;
