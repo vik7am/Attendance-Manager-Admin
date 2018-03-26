@@ -1,5 +1,6 @@
 package com.example.vikrant.attendancemanageradmin.admin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -115,6 +116,8 @@ public class StudentActivity extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
+                //LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                //view = layoutInflater.inflate(R.layout.row0, viewGroup, false);
                 view=LayoutInflater.from(context).inflate(R.layout.row0,viewGroup,false);
             }
             ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
