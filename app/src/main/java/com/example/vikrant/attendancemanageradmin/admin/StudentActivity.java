@@ -118,7 +118,7 @@ public class StudentActivity extends AppCompatActivity {
             {
                 //LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
                 //view = layoutInflater.inflate(R.layout.row0, viewGroup, false);
-                view=LayoutInflater.from(context).inflate(R.layout.row0,viewGroup,false);
+                view=LayoutInflater.from(StudentActivity.this).inflate(R.layout.row0,viewGroup,false);
             }
             ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
             ((TextView)view.findViewById(R.id.name)).setText(studentList.get(i).name);

@@ -205,7 +205,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(R.layout.row1,viewGroup,false);
+                view= LayoutInflater.from(TeacherAttendanceActivity.this).inflate(R.layout.row1,viewGroup,false);
             }
             ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
             ((TextView)view.findViewById(R.id.subject_name)).setText(subjectMap.get(currentTimeTableList.get(i).subject_id));

@@ -218,7 +218,7 @@ public class TimeTableActivity extends AppCompatActivity implements AdapterView.
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(R.layout.row1,viewGroup,false);
+                view= LayoutInflater.from(TimeTableActivity.this).inflate(R.layout.row1,viewGroup,false);
             }
             ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
             ((TextView)view.findViewById(R.id.subject_name)).setText(hashMap.get(currentTimeTableList.get(i).subject_id));

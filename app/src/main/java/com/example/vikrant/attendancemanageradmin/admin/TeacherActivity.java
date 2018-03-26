@@ -117,7 +117,7 @@ public class TeacherActivity extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(R.layout.row0,viewGroup,false);
+                view= LayoutInflater.from(TeacherActivity.this).inflate(R.layout.row0,viewGroup,false);
             }
             ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
             ((TextView)view.findViewById(R.id.name)).setText(teacherList.get(i).name);

@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError error) {}
         });
     }
-
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -120,4 +120,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 }
