@@ -117,11 +117,10 @@ public class TeacherActivity extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view= LayoutInflater.from(context).inflate(R.layout.row0,viewGroup,false);
             }
-            textView=view.findViewById(android.R.id.text1);
-            textView.setText(teacherList.get(i).name);
-            textView.setTextColor(Color.BLACK);
+            ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
+            ((TextView)view.findViewById(R.id.name)).setText(teacherList.get(i).name);
             return view;
         }
     }

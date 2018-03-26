@@ -28,7 +28,7 @@
         <activity android:name=".teacher.MarkAttendanceActivity" />
         <activity android:name=".student.StudentMainActivity" />
         <activity android:name=".student.StudentTimeTableActivity" />
-        <activity android:name=".student.StudentAttendanceActivity"></activity>
+        <activity android:name=".student.StudentAttendanceActivity" />
     </application>
 
 </manifest>

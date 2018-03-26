@@ -192,17 +192,20 @@ public class MarkAttendanceActivity extends AppCompatActivity implements Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view=LayoutInflater.from(context).inflate(R.layout.row0,viewGroup,false);
             }
-            textView=view.findViewById(android.R.id.text1);
-            textView.setText(studentList.get(i).name);
+            ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
+            ((TextView)view.findViewById(R.id.name)).setText(studentList.get(i).name);
+
+            /*textView=view.findViewById(android.R.id.text1);
+            textView.setText(studentList.get(i).name);*/
             if(hashMap.containsKey(studentList.get(i).id))
                 if(hashMap.get(studentList.get(i).id))
-                    textView.setTextColor(Color.GREEN);
+                    ((TextView)view.findViewById(R.id.name)).setTextColor(Color.GREEN);
                 else
-                    textView.setTextColor(Color.RED);
+                    ((TextView)view.findViewById(R.id.name)).setTextColor(Color.RED);
             else
-                textView.setTextColor(Color.BLACK);
+                ((TextView)view.findViewById(R.id.name)).setTextColor(Color.BLACK);
             return view;
         }
     }

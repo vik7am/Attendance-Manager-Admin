@@ -44,7 +44,8 @@ public class TeacherTimeTableActivity extends AppCompatActivity {
     ArrayList<TimeTable> timeTableList;
     ArrayList<TimeTable> currentTimeTableList;
     ArrayList<Subject> subjectList;
-    HashMap<String,String> hashMap;
+    HashMap<String,String> subjectMap,teacherMap;
+
     Calendar calendar;
     String TEACHER_ID;
 
@@ -70,7 +71,8 @@ public class TeacherTimeTableActivity extends AppCompatActivity {
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
         subjectList=new ArrayList<>();
-        hashMap=new HashMap<>();
+        subjectMap=new HashMap<>();
+        teacherMap=new HashMap<>();
         initDatabase();
     }
     public void initDatabase()
@@ -100,7 +102,7 @@ public class TeacherTimeTableActivity extends AppCompatActivity {
                     subject=rowData.getValue(Subject.class);
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
-                    hashMap.put(subject.id,subject.name);
+                    subjectMap.put(subject.id,subject.name);
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -114,6 +116,7 @@ public class TeacherTimeTableActivity extends AppCompatActivity {
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     teacher=rowData.getValue(Teacher.class);
                     teacher.id=rowData.getKey();
+                    subjectMap.put(teacher.id,teacher.name);
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -194,11 +197,15 @@ public class TeacherTimeTableActivity extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view= LayoutInflater.from(context).inflate(R.layout.row1,viewGroup,false);
             }
+            ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
+            ((TextView)view.findViewById(R.id.subject_name)).setText(subjectMap.get(currentTimeTableList.get(i).subject_id));
+            ((TextView)view.findViewById(R.id.teacher_name)).setText(teacherMap.get(currentTimeTableList.get(i).teacher_id));
+            /*
             textView=view.findViewById(android.R.id.text1);
             textView.setText(hashMap.get(currentTimeTableList.get(i).subject_id));
-            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(Color.BLACK);*/
             return view;
         }
     }

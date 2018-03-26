@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.vikrant.attendancemanageradmin.R;
 import com.example.vikrant.attendancemanageradmin.admin.Student;
 import com.example.vikrant.attendancemanageradmin.admin.Subject;
+import com.example.vikrant.attendancemanageradmin.admin.Teacher;
 import com.example.vikrant.attendancemanageradmin.admin.TimeTable;
 import com.example.vikrant.attendancemanageradmin.teacher.Attendance;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +47,7 @@ public class StudentAttendanceActivity extends AppCompatActivity{
     TimeTable timeTable;
     Subject subject;
     Attendance attendance;
+    Teacher teacher;
     ArrayList<TimeTable> timeTableList;
     ArrayList<TimeTable> currentTimeTableList;
     ArrayList<Subject> subjectList;
@@ -53,8 +55,10 @@ public class StudentAttendanceActivity extends AppCompatActivity{
     ArrayList<Attendance> attendanceList;
     Calendar calendar;
     Intent intent;
-    HashMap<String,Boolean> hashMap;
-    HashMap<String,String> hashMap2;
+    HashMap<String,Boolean> presentMap;
+    HashMap<String,String> subjectMap;
+    HashMap<String,String> teacherMap;
+    ArrayList<Integer> presentList,absentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +88,11 @@ public class StudentAttendanceActivity extends AppCompatActivity{
         attendanceList=new ArrayList<>();
         subjectList=new ArrayList<>();
         studentList=new ArrayList<>();
-        hashMap=new HashMap<>();
-        hashMap2=new HashMap<>();
+        presentMap=new HashMap<>();
+        subjectMap=new HashMap<>();
+        teacherMap=new HashMap<>();
+        presentList=new ArrayList<>();
+        absentList=new ArrayList<>();
         initDatabase();
     }
     public void initDatabase()
@@ -119,7 +126,10 @@ public class StudentAttendanceActivity extends AppCompatActivity{
                             {
                                 attendance.id=rowData.getKey();
                                 attendanceList.add(attendance);
-                                hashMap.put(attendance.subject_id,attendance.present);
+                                if(attendance.present)
+                                    presentList.add(attendance.lecture_no);
+                                else
+                                    absentList.add((attendance.lecture_no));
                             }
                 }
                 adapter.notifyDataSetChanged();
@@ -136,10 +146,24 @@ public class StudentAttendanceActivity extends AppCompatActivity{
                     subject=rowData.getValue(Subject.class);
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
-                    hashMap2.put(subject.id,subject.name);
+                    subjectMap.put(subject.id,subject.name);
                 }
                 adapter.notifyDataSetChanged();
             }
+            @Override
+            public void onCancelled(DatabaseError error) {}
+        });
+        db.child("teacher").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot rowData : dataSnapshot.getChildren()) {
+                    teacher=rowData.getValue(Teacher.class);
+                    teacher.id=rowData.getKey();
+                    teacherMap.put(rowData.getKey(),teacher.name);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
             @Override
             public void onCancelled(DatabaseError error) {}
         });
@@ -197,17 +221,18 @@ public class StudentAttendanceActivity extends AppCompatActivity{
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view= LayoutInflater.from(context).inflate(R.layout.row1,viewGroup,false);
             }
-            textView=view.findViewById(android.R.id.text1);
-            textView.setText(hashMap2.get(currentTimeTableList.get(i).subject_id));
-            if(hashMap.containsKey(currentTimeTableList.get(i).subject_id))
-                if(hashMap.get(currentTimeTableList.get(i).subject_id))
-                    textView.setTextColor(Color.GREEN);
-                else
-                    textView.setTextColor(Color.RED);
+            ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
+            ((TextView)view.findViewById(R.id.subject_name)).setText(subjectMap.get(currentTimeTableList.get(i).subject_id));
+            ((TextView)view.findViewById(R.id.teacher_name)).setText(teacherMap.get(currentTimeTableList.get(i).teacher_id));
+
+            if(presentList.contains(i))
+                ((TextView)view.findViewById(R.id.subject_name)).setTextColor(Color.GREEN);
+            else if(absentList.contains(i))
+                ((TextView)view.findViewById(R.id.subject_name)).setTextColor(Color.RED);
             else
-                textView.setTextColor(Color.BLACK);
+                ((TextView)view.findViewById(R.id.subject_name)).setTextColor(Color.BLACK);
             return view;
         }
     }

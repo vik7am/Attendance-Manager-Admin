@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SubjectActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
 
@@ -37,6 +38,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
     Teacher teacher;
     ArrayList<Subject> subjectList;
     ArrayList<Teacher> teacherList;
+    HashMap<String,String> hashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
         listView.setAdapter(adapter);
         subjectList=new ArrayList<>();
         teacherList=new ArrayList<>();
+        hashMap=new HashMap<>();
         initDatabase();
     }
     public void initDatabase()
@@ -69,6 +72,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     subject=rowData.getValue(Subject.class);
                     subjectList.add(subject);
+
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -85,6 +89,7 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
                     teacher=rowData.getValue(Teacher.class);
                     teacherList.add(teacher);
                     teacher.id=rowData.getKey();
+                    hashMap.put(rowData.getKey(),teacher.name);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -159,11 +164,12 @@ public class SubjectActivity extends AppCompatActivity implements DialogInterfac
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view= LayoutInflater.from(context).inflate(R.layout.row1,viewGroup,false);
             }
-            textView=view.findViewById(android.R.id.text1);
-            textView.setText(subjectList.get(i).name);
-            textView.setTextColor(Color.BLACK);
+            ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
+            ((TextView)view.findViewById(R.id.subject_name)).setText(subjectList.get(i).name);
+            ((TextView)view.findViewById(R.id.teacher_name)).setText(hashMap.get(subjectList.get(i).teacher_id));
+            //textView.setTextColor(Color.BLACK);
             return view;
         }
     }

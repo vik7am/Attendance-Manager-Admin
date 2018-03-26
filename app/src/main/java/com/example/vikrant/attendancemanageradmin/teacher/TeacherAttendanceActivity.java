@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class TeacherAttendanceActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -48,7 +49,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
     ArrayList<TimeTable> timeTableList;
     ArrayList<TimeTable> currentTimeTableList;
     ArrayList<Subject> subjectList;
-    HashMap<String,String> hashMap;
+    HashMap<String,String> subjectMap,teacherMap;
     Calendar calendar;
     String TEACHER_ID;
     Intent intent;
@@ -80,7 +81,8 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
         timeTableList=new ArrayList<>();
         currentTimeTableList=new ArrayList<>();
         subjectList=new ArrayList<>();
-        hashMap=new HashMap<>();
+        subjectMap=new HashMap<>();
+        teacherMap=new HashMap<>();
         initDatabase();
     }
     public void initDatabase()
@@ -110,7 +112,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
                     subject=rowData.getValue(Subject.class);
                     subject.id=rowData.getKey();
                     subjectList.add(subject);
-                    hashMap.put(subject.id,subject.name);
+                    subjectMap.put(subject.id,subject.name);
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -124,6 +126,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
                 for (DataSnapshot rowData : dataSnapshot.getChildren()) {
                     teacher=rowData.getValue(Teacher.class);
                     teacher.id=rowData.getKey();
+                    teacherMap.put(teacher.id,teacher.name);
                 }
                 currentData();
                 adapter.notifyDataSetChanged();
@@ -202,11 +205,15 @@ public class TeacherAttendanceActivity extends AppCompatActivity implements Adap
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view==null)
             {
-                view= LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1,viewGroup,false);
+                view= LayoutInflater.from(context).inflate(R.layout.row1,viewGroup,false);
             }
+            ((TextView)view.findViewById(R.id.s_no)).setText(""+(i+1));
+            ((TextView)view.findViewById(R.id.subject_name)).setText(subjectMap.get(currentTimeTableList.get(i).subject_id));
+            ((TextView)view.findViewById(R.id.teacher_name)).setText(teacherMap.get(currentTimeTableList.get(i).teacher_id));
+            /*
             textView=view.findViewById(android.R.id.text1);
             textView.setText(hashMap.get(currentTimeTableList.get(i).subject_id));
-            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(Color.BLACK);*/
             return view;
         }
     }
