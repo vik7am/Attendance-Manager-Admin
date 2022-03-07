@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.vikrant.attendancemanageradmin">
+    package="com.example.attendancemanager">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -8,27 +11,55 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.AttendanceManager">
+        <activity
+            android:name=".teacher.TeacherTimeTableActivity"
+            android:exported="false" />
+        <activity
+            android:name=".teacher.TeacherMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".teacher.TeacherAttendanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".teacher.MarkAttendanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".student.StudentTimeTableActivity"
+            android:exported="false" />
+        <activity
+            android:name=".student.StudentMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".student.StudentAttendanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.TimeTableSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.TimeTableActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.TeacherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.SubjectActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.StudentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".admin.StudentActivity" />
-        <activity android:name=".admin.AdminMainActivity" />
-        <activity android:name=".admin.TeacherActivity" />
-        <activity android:name=".admin.SubjectActivity" />
-        <activity android:name=".admin.TimeTableSettingActivity" />
-        <activity android:name=".admin.TimeTableActivity" />
-        <activity android:name=".teacher.TeacherMainActivity" />
-        <activity android:name=".teacher.TeacherTimeTableActivity" />
-        <activity android:name=".teacher.TeacherAttendanceActivity" />
-        <activity android:name=".teacher.MarkAttendanceActivity" />
-        <activity android:name=".student.StudentMainActivity" />
-        <activity android:name=".student.StudentTimeTableActivity" />
-        <activity android:name=".student.StudentAttendanceActivity" />
     </application>
 
 </manifest>

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:478268282214:android:1d08fac820f4c537",
+        "mobilesdk_app_id": "1:478268282214:android:115e51de812f9ef7cd64a7",
         "android_client_info": {
-          "package_name": "com.example.vikrant.myapplication"
+          "package_name": "com.example.attendancemanager"
         }
       },
       "oauth_client": [
@@ -25,15 +25,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478268282214-j82mdl83sa2jfh435migtj9h1ldvbri2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -56,15 +54,42 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478268282214-j82mdl83sa2jfh435migtj9h1ldvbri2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478268282214:android:1d08fac820f4c537",
+        "android_client_info": {
+          "package_name": "com.example.vikrant.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478268282214-j82mdl83sa2jfh435migtj9h1ldvbri2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3DKMS6jOEeK2fSajLgUblXjeTBiEpxBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478268282214-j82mdl83sa2jfh435migtj9h1ldvbri2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
